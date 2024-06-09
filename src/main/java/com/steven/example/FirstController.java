@@ -3,56 +3,52 @@ package com.steven.example;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @RestController
 public class FirstController {
 
+    private final StudentRepository respository;
 
-//    @GetMapping("/hello")
-    public String sayHello(){
-        return "Hello from my first controller";
+    public FirstController(StudentRepository respository) {
+        this.respository = respository;
     }
 
-    @GetMapping("/hello-2")
-    @ResponseStatus(HttpStatus.ACCEPTED)
-    public String sayHello2(){
-        return "Hello 2 from my first controller";
-    }
-
-    @PostMapping("/post")
-    public String post(
-            @RequestBody String message
+    @PostMapping("/students")
+    public Student post(
+            @RequestBody Student student
     ){
-        return "Request Accepted and message is: "+message;
+        return respository.save(student);
     }
 
-    @PostMapping("/post-order")
-    public String post(
-            @RequestBody Order order
-    ){
-        return "Request Accepted and order is: "+order.toString();
+    @GetMapping("/students")
+    public List<Student>  findAllStudent(){
+        return respository.findAll();
     }
 
-    @PostMapping("/post-order-record")
-    public String postRecord(
-            @RequestBody OrderRecord order
+    @GetMapping("/students/{student-id}")
+    public Student findStudentById(
+            @PathVariable("student-id")int id
     ){
-        return "Request Accepted and order is: "+order.toString();
+        return respository.findById(id).orElse(new Student());
     }
 
-    // http://localhost:8080/hello/steven
-    @GetMapping("/hello/{user-name}")
-    public String pathVar(
-            @PathVariable("user-name")  String userName
+
+    @GetMapping("/students/search/{student-name}")
+    public List<Student> findStudentsByName(
+            @PathVariable("student-name")String name
     ){
-        return "my value= "+userName;
+        return respository.findAllByFirstnameContaining(name);
     }
 
-    // http://localhost:8080/hello?param_name=paramvalue&param_name2=paramvalue2
-    @GetMapping("/hello")
-    public String pathVar(
-            @RequestParam("name")  String userName,
-            @RequestParam("last-name")  String userLastName
+    @DeleteMapping("/students/{student-id}")
+    @ResponseStatus(HttpStatus.OK)
+    public void deleteStudentById(
+            @PathVariable("student-id")int id
     ){
-        return "my value= "+userName+" "+userLastName;
+        respository.deleteById(id);
     }
+
+
+
 }

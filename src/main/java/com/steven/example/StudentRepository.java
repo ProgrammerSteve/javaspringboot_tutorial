@@ -3,6 +3,8 @@ package com.steven.example;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 
-public interface StudentRepository extends JpaRepository<Student, Integer> {
+import java.util.List;
 
+public interface StudentRepository extends JpaRepository<Student, Integer> {
+    List<Student> findAllByFirstnameContaining(String p);
 }
