@@ -1,4 +1,4 @@
-package com.steven.example;
+package com.steven.example.student;
 
 
 import org.springframework.data.jpa.repository.JpaRepository;

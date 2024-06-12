@@ -1,11 +1,40 @@
-package com.steven.example;
+package com.steven.example.student;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
-
+import com.steven.example.school.School;
+import com.steven.example.studentprofile.StudentProfile;
 
 @Entity
 @Table(name="T_STUDENT")
 public class Student {
+    public StudentProfile getStudentProfile() {
+        return studentProfile;
+    }
+
+    public void setStudentProfile(StudentProfile studentProfile) {
+        this.studentProfile = studentProfile;
+    }
+
+    public School getSchool() {
+        return school;
+    }
+
+    public void setSchool(School school) {
+        this.school = school;
+    }
+
+    @ManyToOne
+    @JoinColumn(
+            name = "school_id"
+    )
+    @JsonBackReference
+    private School school;
+
+
+    @OneToOne(mappedBy = "student",
+        cascade = CascadeType.ALL)
+    private StudentProfile studentProfile;
 
     @Id
     @GeneratedValue
